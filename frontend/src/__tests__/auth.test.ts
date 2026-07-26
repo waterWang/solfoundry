@@ -56,13 +56,13 @@ describe('exchangeGitHubCode', () => {
 
   it('sends code and state to the backend', async () => {
     const mockUser = { id: '1', username: 'testuser', avatar_url: 'https://avatars.githubusercontent.com/u/1?v=4' };
-    const mockResponse = {
+    const mockResponseData = {
       access_token: 'test-access-token',
       refresh_token: 'test-refresh-token',
       token_type: 'bearer',
       user: mockUser,
     };
-    mockFetch.mockResolvedValueOnce(mockResponse(mockResponse));
+    mockFetch.mockResolvedValueOnce(mockResponse(mockResponseData));
 
     const result = await exchangeGitHubCode('test-code', 'test-state');
 
