@@ -11,6 +11,10 @@ describe('config', () => {
       if (v === undefined) delete process.env[k];
       else process.env[k] = v;
     }
+    // Also delete keys the test added (not in the original snapshot).
+    for (const k of Object.keys(process.env)) {
+      if (!clean.has(k)) delete process.env[k];
+    }
   });
 
   it('applies sensible defaults', () => {
