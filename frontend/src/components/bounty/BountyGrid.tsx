@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, Loader2 } from 'lucide-react';
 import { BountyCard } from './BountyCard';
@@ -12,9 +13,41 @@ import { DEFAULT_FILTERS } from '../../types/bounty';
 const ITEMS_PER_PAGE = 12;
 
 export function BountyGrid() {
-  const [filters, setFilters] = useState<BountyBoardFilters>(DEFAULT_FILTERS);
-  const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<string>('open');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState<BountyBoardFilters>(() => {
+    // Restore filters from URL search params for persistence
+    const fromUrl = (key: string, fallback: string) => searchParams.get(key) ?? fallback;
+    const skillsRaw = searchParams.get('skills');
+    return {
+      category: fromUrl('category', DEFAULT_FILTERS.category),
+      skills: skillsRaw ? skillsRaw.split(',').filter(Boolean) : DEFAULT_FILTERS.skills,
+      tier: fromUrl('tier', DEFAULT_FILTERS.tier),
+      rewardMin: Number(fromUrl('rewardMin', String(DEFAULT_FILTERS.rewardMin))),
+      rewardMax: Number(fromUrl('rewardMax', String(DEFAULT_FILTERS.rewardMax))),
+      deadlineBefore: fromUrl('deadlineBefore', DEFAULT_FILTERS.deadlineBefore),
+      searchQuery: fromUrl('q', DEFAULT_FILTERS.searchQuery),
+    };
+  });
+  const [page, setPage] = useState(() => {
+    const p = searchParams.get('page');
+    return p ? Math.max(1, parseInt(p, 10)) : 1;
+  });
+  const [statusFilter, setStatusFilter] = useState<string>(() => searchParams.get('status') ?? 'open');
+
+  // Sync filters to URL search params for search persistence
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filters.category !== DEFAULT_FILTERS.category) params.set('category', filters.category);
+    if (filters.skills.length > 0) params.set('skills', filters.skills.join(','));
+    if (filters.tier) params.set('tier', filters.tier);
+    if (filters.rewardMin !== DEFAULT_FILTERS.rewardMin) params.set('rewardMin', String(filters.rewardMin));
+    if (filters.rewardMax !== DEFAULT_FILTERS.rewardMax) params.set('rewardMax', String(filters.rewardMax));
+    if (filters.deadlineBefore) params.set('deadlineBefore', filters.deadlineBefore);
+    if (filters.searchQuery) params.set('q', filters.searchQuery);
+    if (page > 1) params.set('page', String(page));
+    if (statusFilter !== 'open') params.set('status', statusFilter);
+    setSearchParams(params, { replace: true });
+  }, [filters, page, statusFilter, setSearchParams]);
 
   const apiParams = useMemo(() => {
     const params: Record<string, string | number | boolean | undefined> = {
