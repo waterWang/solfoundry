@@ -41,6 +41,7 @@ function ToastItem({
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 80, scale: 0.95, transition: { duration: 0.2 } }}
       transition={{ type: 'spring', stiffness: 400, damping: 30, mass: 0.8 }}
+      role="alert"
       className={`
         flex items-start gap-3 p-4 pr-3
         w-80 rounded-lg shadow-lg
