@@ -154,3 +154,61 @@ export function ProfileDashboardSkeleton() {
     </div>
   );
 }
+
+// ─── Bounty Detail Skeleton ────────────────────────────────────────────────
+export function BountyDetailSkeleton() {
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      {/* Back button skeleton */}
+      <SkeletonBlock className="w-24 h-5 rounded" />
+      
+      {/* Title area */}
+      <div className="space-y-3">
+        <SkeletonText width="80%" className="h-8" />
+        <SkeletonText width="50%" className="h-4" />
+      </div>
+      
+      {/* Meta badges row */}
+      <div className="flex items-center gap-3">
+        <SkeletonBlock className="w-16 h-6 rounded-full" />
+        <SkeletonBlock className="w-20 h-6 rounded-full" />
+        <SkeletonBlock className="w-24 h-6 rounded-full" />
+      </div>
+      
+      {/* Description skeleton */}
+      <div className="space-y-2">
+        <SkeletonText width="100%" />
+        <SkeletonText width="100%" />
+        <SkeletonText width="90%" />
+        <SkeletonText width="70%" />
+        <SkeletonText width="95%" />
+        <SkeletonText width="60%" />
+      </div>
+      
+      {/* Reward card */}
+      <div className="rounded-xl border border-border bg-forge-900 p-6 space-y-3">
+        <SkeletonText width="120px" />
+        <SkeletonBlock className="w-40 h-8 rounded" />
+        <div className="flex gap-3 mt-2">
+          <SkeletonBlock className="w-32 h-10 rounded-lg" />
+          <SkeletonBlock className="w-32 h-10 rounded-lg" />
+        </div>
+      </div>
+      
+      {/* Submissions section */}
+      <div className="space-y-2">
+        <SkeletonText width="150px" className="h-5" />
+        {[1, 2].map((i) => (
+          <div key={i} className="flex items-center gap-4 px-4 py-3 rounded-lg border border-border bg-forge-900">
+            <SkeletonAvatar size="w-8 h-8" />
+            <div className="flex-1 space-y-1">
+              <SkeletonText width="60%" />
+              <SkeletonText width="40%" />
+            </div>
+            <SkeletonBlock className="w-16 h-6 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
